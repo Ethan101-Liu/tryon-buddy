@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" preserveAspectRatio="none">
+  <defs>
+    <filter id="f" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence baseFrequency=".052 .078" numOctaves="3" seed="9" result="grain"/>
+      <feDisplacementMap in="SourceGraphic" in2="grain" scale="8"/>
+    </filter>
+  </defs>
+  <path filter="url(#f)" fill="white" d="M29 29 Q82 15 137 21 T256 11 L283 12 321 7 359 12 417 6 478 9 560 5 586 13 583 69 591 138 588 184 594 249 587 307 592 371 583 427 589 510 584 553 594 622 586 699 591 722 563 725 515 720 472 731 419 730 368 737 305 731 257 743 220 738 168 743 124 735 73 744 16 739 21 683 12 618 18 564 9 486 14 423 6 357 13 304 7 259 17 201 12 150 23 96Z"/>
+</svg>

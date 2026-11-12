@@ -1,0 +1,247 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="studio.css?v=compare-picks"><title>试穿搭子 · 试穿对话</title><link rel="stylesheet" href="spaces.css?v=closet-removal-1"><link rel="stylesheet" href="account-ui.css?v=profile"><link rel="stylesheet" href="conversation.css?v=mobile-portrait-2"><link rel="stylesheet" href="reference-board.css?v=linen-reference-3"><body class="verA"><header class="workspace-header">
+  <a class="workspace-brand" href="./collections/?v=tryon-chat" aria-label="试穿搭子首页">试穿搭子</a>
+  <nav aria-label="主导航">
+    <a class="home-link workspace-link" href="./collections/?v=tryon-chat">首页</a>
+    <button type="button" class="workspace-link current" data-space="styling">试穿对话</button>
+    <button type="button" id="mobile-reference" aria-expanded="false" aria-controls="workspace-reference">穿搭参考<i aria-hidden="true"></i></button>
+    <button type="button" class="account-entry" data-space="account"><i aria-hidden="true"></i><span class="account-label">登录/注册</span></button>
+  </nav>
+</header><main class="layoutA"><aside class="rail paper"><div class="small-cap">试穿空间</div><div class="rail-links"><button class="local-link active" data-space="styling"><i aria-hidden="true" class="nav-ico n0"></i>试穿对话</button><button class="local-link " data-space="closet"><i aria-hidden="true" class="nav-ico n1"></i>我的衣服</button><button class="local-link " data-space="history"><i aria-hidden="true" class="nav-ico n2"></i>试穿记录</button><button class="local-link " data-space="saved"><i aria-hidden="true" class="nav-ico n3"></i>备选</button></div></aside><section class="setup" hidden><div class="pagehead"><h1 tabindex="-1">开始试穿</h1></div>
+<div class="source">
+  <div class="portrait-thumbnail">
+    <button type="button" class="photo-print portrait-picker" aria-label="选择试穿照片" aria-describedby="portrait-guide">
+      <img class="original" alt="已上传的试穿照片"><span class="portrait-drop-hint" aria-hidden="true">点击或拖入</span>
+    </button>
+    <button type="button" id="remove-photo" aria-label="删除试穿照片" title="删除试穿照片" hidden>
+      <svg aria-hidden="true" viewBox="0 0 20 20" width="21" height="21">
+        <circle cx="10" cy="10" r="9.25" fill="#fffaf3" stroke="#b8aa99"/>
+        <path d="m7 7 6 6m0-6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div>
+    <small class="portrait-status" role="status">未上传</small>
+    <h3>试穿照片</h3>
+    <p class="portrait-guide" id="portrait-guide">试上衣可用正面半身照<br>试下装请用正面全身照</p>
+    <button type="button" class="link portrait-action" id="change-photo" aria-describedby="portrait-guide">上传本人照 ↗</button>
+    <input type="file" accept="image/*,.heic,.heif" hidden id="portrait-file" aria-label="上传试穿照片">
+  </div>
+</div>
+<section class="formsection garments">
+  <div class="section-line"><h3>选择试穿衣物</h3><button class="link" id="rules">图片规则 ↗</button></div>
+  <div class="segments" aria-label="试穿方式"><button class="chip on" aria-pressed="true" data-mode="single">单件试穿</button><button class="chip" aria-pressed="false" data-mode="outfit">成套搭配</button></div>
+  <div id="slots"></div>
+  <template id="garment-upload-empty">
+    <div class="garment-dropzone">
+      <strong class="drop-prompt">将服装图片拖到这里</strong>
+      <strong class="drop-release">松开即可添加</strong>
+      <small>支持 JPG、PNG、WebP，可一次选择多张</small>
+    </div>
+  </template>
+  <p class="upload-hint">可一次拖入多张图片，也可分次添加。</p>
+  <div class="outfit-photo-prompt" hidden>
+    <img alt="已添加的试穿照">
+    <span id="outfit-photo-guide"></span>
+    <button type="button" class="portrait-action" data-replace-label="更换" aria-describedby="outfit-photo-guide">上传照片 <span aria-hidden="true">↗</span></button>
+  </div>
+</section>
+<dialog id="image-rules" aria-labelledby="rules-title">
+  <header class="rules-head">
+    <h2 id="rules-title">图片规则</h2>
+    <form method="dialog"><button aria-label="关闭图片规则" autofocus>×</button></form>
+  </header>
+  <div class="rules-body">
+    <section class="mode-guide" aria-labelledby="mode-heading">
+      <h3 id="mode-heading"></h3>
+      <p id="mode-note"></p>
+      <div class="example-groups">
+        <section class="example-group">
+          <h4><span class="example-mark" aria-hidden="true">✓</span>推荐上传</h4>
+          <div class="example-strip" data-examples="single">
+            <figure><img src="img/reference-garments/stripe-shirt.webp" alt="一件雾蓝衬衫的平铺图"><figcaption>上衣平铺</figcaption></figure>
+            <figure><img src="img/reference-garments/ivory-trousers.webp" alt="一条完整的米白长裤"><figcaption>裤子平铺</figcaption></figure>
+            <figure><img src="img/original.webp" alt="人物正面穿着黑色短袖，衣身清晰可见"><figcaption>真人上身</figcaption></figure>
+          </div>
+          <div class="example-strip pair-strip" data-examples="outfit" hidden>
+            <div class="example-pair" role="group" aria-label="背心配半身裙">
+              <figure><img src="img/rules/camisole.webp" alt="吊带背心"><figcaption>上装区</figcaption></figure>
+              <figure><img src="img/rules/skirt.webp" alt="半身裙"><figcaption>下装区</figcaption></figure>
+            </div>
+            <div class="example-pair" role="group" aria-label="风衣配长裤">
+              <figure><img src="img/rules/coat.webp" alt="风衣外套"><figcaption>上装区</figcaption></figure>
+              <figure><img src="img/reference-garments/ivory-trousers.webp" alt="长裤"><figcaption>下装区</figcaption></figure>
+            </div>
+          </div>
+        </section>
+        <section class="example-group avoid">
+          <h4><span class="example-mark" aria-hidden="true">×</span>请避开这些图</h4>
+          <div class="example-strip">
+            <figure><img src="img/rules/set.webp" alt="上衣和裙子放在同一张图里"><figcaption id="mixed-caption"></figcaption></figure>
+            <figure><img src="img/rules/obscured.webp" alt="肩袋遮住上衣和裤腰"><figcaption>衣物被遮挡</figcaption></figure>
+            <figure><div class="blur-example"><img src="img/reference-garments/stripe-shirt.webp" alt="失焦的衬衫图，细节看不清"></div><figcaption>细节模糊</figcaption></figure>
+          </div>
+        </section>
+      </div>
+    </section>
+    <h3>怎样把几件衣服叠穿在一起？</h3>
+    <details open>
+      <summary><span>01</span>每件衣服各选一张图</summary>
+      <p>在「单件试穿」里，从本地上传衣服图片，或从「我的衣服」里选。选好两件上衣后，上传按钮下方会出现<strong>「将这两件叠穿」</strong>。</p>
+      <p>例如选了白 T 恤和蓝衬衫，直接生成会得到两张图，每张试一件。点「将这两件叠穿」，两件就会穿在同一个人身上，整套出一张图。</p>
+    </details>
+    <details open>
+      <summary><span>02</span>生成前，按“从内到外”确认顺序</summary>
+      <p>系统会先排好穿着顺序。列表第一件贴身穿，最后一件穿在最外面。例如「内层：白 T 恤，外层：蓝衬衫」，表示衬衫穿在 T 恤外面。两件衣服可以点<strong>「交换顺序」</strong>对调。</p>
+      <p>三件及以上也可以叠穿，例如白 T 恤 → 开衫 → 大衣。生成时以你最后确认的顺序为准，内层衣服只会在领口、袖口、敞开的衣襟等实际露出的部位显示。</p>
+    </details>
+    <details>
+      <summary><span>03</span>配同一条裤子时，可以选两种穿法</summary>
+      <p>以白 T 恤、蓝衬衫和牛仔裤为例。</p>
+      <p><strong>分别搭配</strong>　白 T 恤配牛仔裤是一套，蓝衬衫配牛仔裤是另一套。只选一套出 1 张，两套都选出 2 张。</p>
+      <p><strong>叠穿成一套</strong>　白 T 恤穿里面，蓝衬衫穿外面，再配牛仔裤，整套出 1 张。试裤子需要一张能看清全身的本人照。</p>
+    </details>
+    <details>
+      <summary><span>04</span>只想换外套时，可以沿用照片里的内搭</summary>
+      <p>例如本人照里穿着白 T 恤和牛仔夹克，选一件新西装后，西装会替换牛仔夹克，保留照片里能看清的白 T 恤。</p>
+      <p>想换掉白 T 恤，可以点<strong>「更换内搭」</strong>，从「我的衣服」里选，或上传新的内搭图。外套敞开还是扣合，跟随所选商品图；如果新外套是敞开的，而原照里看不清内搭，生成前会提示你补选。</p>
+    </details>
+    <details>
+      <summary><span>05</span>生成前可以随时改回分别试穿</summary>
+      <p>点<strong>「取消叠穿」</strong>，已选衣物会保留，恢复为每件各出一张。可以先看底部的「预计生成」张数，确认后再点生成。</p>
+    </details>
+  </div>
+</dialog>
+<dialog id="popup"><h3></h3><div id="content"></div><form method="dialog"><button class="ghost">关闭</button></form></dialog>
+<dialog id="replace-outfit" aria-labelledby="replace-title">
+  <h2 id="replace-title">替换当前搭配？</h2>
+  <div class="replace-body">
+    <div class="replace-changes">
+      <section><h3>将换下</h3><ul class="replace-removed"></ul></section>
+      <span class="replace-arrow" aria-hidden="true">→</span>
+      <section><h3>将换上</h3><ul class="replace-added"></ul></section>
+    </div>
+    <section class="replace-kept"><h3>继续穿</h3><ul></ul></section>
+  </div>
+  <form method="dialog" class="replace-actions">
+    <button value="cancel" class="ghost" autofocus>保留当前搭配</button>
+    <button value="replace" class="primary">确认替换</button>
+  </form>
+</dialog>
+<div class="generate-foot"><div class="microline" aria-live="polite"><span>预计生成</span><strong>0 张试穿图</strong></div><button class="primary full" disabled>生成试穿图 <span aria-hidden="true">→</span></button></div></section><section class="lookbook" id="workspace-reference" aria-label="穿搭参考">
+  <div class="lookbook-heading">
+    <div class="view-tabs" role="tablist" aria-label="试穿展示">
+      <button id="reference-tab" role="tab" aria-selected="true" aria-controls="reference-view">穿搭参考</button>
+      <button id="results-tab" role="tab" aria-selected="false" aria-controls="results-view" tabindex="-1">试穿结果</button>
+    </div>
+    <button type="button" class="compare-entry" aria-haspopup="dialog" aria-controls="result-compare" hidden>搭配对比</button>
+  </div>
+  <div id="reference-view" role="tabpanel" tabindex="0" aria-labelledby="reference-tab">
+    <h2 id="look-top" class="reference-hero-title" tabindex="-1" aria-live="polite"></h2>
+    <section class="look-board" id="look-board" aria-label="衣服原图与示例人物的试穿对照">
+      <div class="look-track" tabindex="0" role="region" aria-label="穿搭示例，可左右滑动或按方向键切换"></div>
+      <button type="button" class="reference-zoom" aria-haspopup="dialog" aria-controls="reference-lightbox">查看对照大图</button>
+    </section>
+    <div class="carousel-controls">
+      <button type="button" class="look-previous" aria-label="上一个穿搭示例">‹</button>
+      <div class="look-dots" role="group" aria-label="切换参考案例"></div>
+      <button type="button" class="look-next" aria-label="下一个穿搭示例">›</button>
+    </div>
+    <section class="reference-browse" aria-labelledby="reference-cases-title">
+      <div class="reference-section-head">
+        <h3 id="reference-cases-title">穿搭案例</h3>
+        <nav class="look-filters" aria-label="穿搭参考分类">
+          <button type="button" aria-pressed="true">全部</button>
+          <button type="button" aria-pressed="false">通勤</button>
+          <button type="button" aria-pressed="false">日常</button>
+          <button type="button" aria-pressed="false">童装</button>
+        </nav>
+      </div>
+      <div class="look-grid" role="group" aria-label="穿搭案例，选择后在上方查看"></div>
+    </section>
+  </div>
+  <dialog id="reference-lightbox" aria-labelledby="reference-lightbox-title">
+    <div class="reference-lightbox-head">
+      <h2 id="reference-lightbox-title"></h2>
+      <form method="dialog"><button type="submit" class="reference-lightbox-close" aria-label="关闭对照大图" autofocus>关闭 <span aria-hidden="true">×</span></button></form>
+    </div>
+    <div class="reference-lightbox-content"></div>
+  </dialog>
+  <section id="results-view" role="tabpanel" aria-labelledby="results-tab" hidden>
+    <section class="results-empty" aria-labelledby="empty-result-title">
+      <div class="empty-heading">
+        <div><h2 id="empty-result-title">还没有试穿结果</h2><p>试穿图生成后，可以在这里查看和对比。</p></div>
+        <button type="button" class="go-fitting">去试穿 <span aria-hidden="true">↗</span></button>
+      </div>
+      <button type="button" class="sample-preview" aria-labelledby="sample-call sample-title">
+        <span class="sample-pieces" aria-hidden="true"></span>
+        <span class="sample-preview-foot">
+          <span><strong id="sample-title">一条长裤，两种搭配</strong><small>细条纹衬衫 / 卡其风衣</small></span>
+          <span class="sample-call"><span id="sample-call">查看示例搭配</span> <span aria-hidden="true">→</span></span>
+        </span>
+      </button>
+      <p class="sample-error" role="status" hidden>示例图片未能载入，请再试一次。</p>
+    </section>
+    <div class="sample-context" hidden><span>穿搭示例</span><button type="button" class="go-fitting">返回我的试穿 <span aria-hidden="true">↗</span></button></div>
+    <div class="result-batch" hidden>
+      <div class="batch-info"><div><h2></h2><p></p></div></div>
+      <div class="batch-controls">
+        <span class="result-status" role="status"></span>
+        <div class="result-filter" role="group" aria-label="筛选本次试穿结果" hidden>
+          <button type="button" aria-controls="result-grid" aria-pressed="true">全部 <b>0</b></button>
+          <button type="button" aria-controls="result-grid" aria-pressed="false">只看备选 <b>0</b></button>
+        </div>
+      </div>
+    </div>
+    <div class="result-grid" id="result-grid"></div>
+  </section>
+  <dialog id="result-compare" aria-labelledby="compare-title">
+    <div class="compare-head">
+      <h2 id="compare-title">搭配对比</h2>
+      <button type="button" class="compare-reselect" hidden>重选搭配</button>
+      <form method="dialog"><button type="submit" class="compare-close" autofocus><span class="compare-close-text">返回结果</span> <span aria-hidden="true">×</span></button></form>
+    </div>
+    <div class="compare-picker" hidden>
+      <div class="compare-options" role="group" aria-label="选择两张试穿图"></div>
+      <div class="compare-actions">
+        <div class="compare-selection">
+          <span class="compare-selected" role="status"></span>
+          <div class="compare-picked" role="group" aria-label="移出已选搭配" hidden>
+            <button type="button" hidden></button><button type="button" hidden></button>
+          </div>
+        </div>
+        <button type="button" class="compare-start" disabled>对比这两张</button>
+      </div>
+    </div>
+    <div class="compare-view" hidden>
+      <div class="compare-pair"></div>
+      <div class="compare-switch" role="group" aria-label="切换对比搭配"></div>
+    </div>
+  </dialog>
+  <dialog id="result-lightbox" aria-labelledby="enlarged-title" aria-describedby="enlarged-detail">
+    <div class="lightbox-bar">
+      <span class="lightbox-count" role="status"></span>
+      <button type="button" class="shortlist-action" aria-label="加入备选" aria-pressed="false">
+        <span class="shortlist-pill">
+          <svg aria-hidden="true" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 2.5h10v15l-5-3.6-5 3.6z"/></svg>
+          <span class="shortlist-text">加入备选</span>
+        </span>
+      </button>
+      <form method="dialog"><button type="submit" aria-label="关闭大图" autofocus>关闭 ×</button></form>
+    </div>
+    <div class="lightbox-track"></div>
+    <div class="lightbox-footer">
+      <div><h2 id="enlarged-title"></h2><p id="enlarged-detail" hidden></p></div>
+      <div class="lightbox-nav" role="group" aria-label="切换大图" hidden>
+        <button type="button" aria-label="上一张">←</button>
+        <button type="button" aria-label="下一张">→</button>
+      </div>
+    </div>
+    <div class="sample-tools" hidden>
+      <details class="sample-originals">
+        <summary>查看衣物原图</summary>
+        <div class="sample-original-pieces"></div>
+      </details>
+      <button type="button" class="sample-try">用这套试穿 <span aria-hidden="true">→</span></button>
+    </div>
+  </dialog>
+</section><section id="space-page" hidden aria-label="个人试穿空间"></section></main><dialog id="space-dialog"><div></div></dialog><p id="space-notice" role="status" hidden></p><script src="upload-policy.js?v=mobile-portrait-2"></script><script src="upload.js?v=mobile-portrait-2"></script><script src="reference-cases.js?v=garment-originals"></script><script src="lookbook.js?v=autoplay-1"></script><script src="results.js?v=review-reuse-1"></script><script src="profile-photo.js"></script><script src="wardrobe.js?v=closet-removal-1"></script><script src="conversation-intent.js?v=first-outfit-1"></script><script src="conversation-store.js?v=chat-reset-1"></script><script src="conversation-codec.js?v=review-reuse-1"></script><script src="stylist.js?v=review-reuse-1"></script><script src="spaces.js?v=closet-removal-1"></script><script src="account-ui.js?v=mobile-portrait-2"></script></body></html>

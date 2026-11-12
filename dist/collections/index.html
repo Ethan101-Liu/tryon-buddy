@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fcf8f2"><title>试穿搭子 · 窗边印相</title>
+  <link rel="stylesheet" href="page.css?v=paper-mask">
+<link rel="stylesheet" href="../account-ui.css?v=profile"></head>
+<body>
+<main id="home">
+  <header class="site-header">
+    <a class="brand" href="#home">试穿搭子</a>
+    <nav class="primary-nav" aria-label="主导航">
+      <a href="#home" aria-current="page">首页</a>
+      <button type="button" aria-haspopup="dialog" aria-controls="styling">试穿对话</button>
+
+      <button type="button" aria-haspopup="dialog" aria-controls="account">登陆/注册</button>
+    </nav>
+  </header>
+  <nav class="series-nav" aria-label="系列导航">
+    <a href="#series-B" aria-current="location">女士系列</a>
+    <a href="#series-M1">男士系列</a>
+    <a href="#series-K1">童装系列</a>
+  </nav>
+  <div id="stories"></div>
+  <footer><div class="dock"><button id="enter" type="button" aria-haspopup="dialog" aria-controls="studio">进入试穿空间 <span aria-hidden="true">↗</span></button></div></footer>
+</main>
+<dialog id="studio" class="preview" aria-labelledby="studio-label">
+  <form method="dialog" class="preview-bar"><h2 id="studio-label">AI生图 · 工作台预览</h2><button id="back">返回长卷</button></form>
+  <img src="../img/work.webp" alt="试穿工作台，选择本人照片与衣服后开始试穿">
+</dialog>
+<dialog id="styling" class="preview" aria-labelledby="styling-label">
+  <form method="dialog" class="preview-bar"><h2 id="styling-label">AI搭配 · 搭子对话预览</h2><button>返回长卷</button></form>
+  <img loading="lazy" src="../img/styling-preview.webp" alt="搭子对话示例，询问蓝衬衫的通勤搭配并选择深色或浅色裤装">
+</dialog>
+<dialog id="account" class="preview account-preview" aria-labelledby="account-label">
+  <form method="dialog" class="preview-bar"><h2 id="account-label">登陆/注册</h2><button>返回长卷</button></form>
+  <p id="account-status" role="status">前端预览可使用演示账号体验。</p>
+  <button id="demo-account" type="button">使用演示账号</button>
+</dialog>
+<script src="pull-tag.js?v=vertical-tag"></script>
+<script src="page.js?v=tryon-chat"></script>
+<script src="../profile-photo.js"></script><script src="../account-ui.js?v=wardrobe-owners-2"></script></body>
+</html>
