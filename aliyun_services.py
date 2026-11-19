@@ -30,6 +30,20 @@ def setting(name):
     return value
 
 
+def vision_model():
+    return os.environ.get('QWEN_VISION_MODEL') or 'qwen3-vl-plus'
+
+
+def image_model():
+    return os.environ.get('QWEN_IMAGE_MODEL') or 'qwen-image-3.0'
+
+
+def configured():
+    return all(os.environ.get(key) for key in (
+        'DASHSCOPE_API_KEY', 'BAILIAN_WORKSPACE_ID',
+        'ALIBABA_CLOUD_ACCESS_KEY_ID', 'ALIBABA_CLOUD_ACCESS_KEY_SECRET'))
+
+
 def qwen(instruction, context, image=None):
     key = setting('DASHSCOPE_API_KEY')
     workspace = setting('BAILIAN_WORKSPACE_ID')
@@ -48,7 +62,7 @@ def qwen(instruction, context, image=None):
         response = requests.post(
             f'https://{workspace}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions',
             headers={'Authorization': 'Bearer ' + key}, timeout=(8, 60),
-            json={'model': 'qwen3-vl-plus', 'enable_thinking': False, 'response_format': {'type': 'json_object'},
+            json={'model': vision_model(), 'enable_thinking': False, 'response_format': {'type': 'json_object'},
                   'messages': [{'role': 'system', 'content': instruction}, {'role': 'user', 'content': parts}]})
         if not response.ok:
             raise CloudError(f'千问云端调用失败（HTTP {response.status_code}）。')
@@ -168,7 +182,7 @@ def try_on(person, garment_data, category, photo_type, request_text, size):
         response = requests.post(
             f'https://{workspace}.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation',
             headers={'Authorization': 'Bearer ' + key}, timeout=(8, 240),
-            json={'model': 'qwen-image-3.0', 'input': {'messages': [{'role': 'user', 'content': content}]},
+            json={'model': image_model(), 'input': {'messages': [{'role': 'user', 'content': content}]},
                   'parameters': {'n': 1, 'size': size, 'prompt_extend': False, 'watermark': False}})
         if not response.ok:
             raise CloudError(f'百炼试穿请求失败（HTTP {response.status_code}），请检查额度、权限或稍后重试。')

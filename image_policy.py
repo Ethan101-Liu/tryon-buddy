@@ -26,6 +26,7 @@ class UploadPolicy:
 
     def __init__(self, document_path):
         self.db_path = Path(document_path).resolve().parent.parent / '.runtime' / 'passed-reviews.sqlite3'
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
         with closing(sqlite3.connect(self.db_path)) as db, db:
             db.execute('CREATE TABLE IF NOT EXISTS passed (role TEXT, version TEXT, digest BLOB, expires REAL, PRIMARY KEY(role,version,digest))')
         self.document_path = Path(document_path)

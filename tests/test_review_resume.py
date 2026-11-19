@@ -1,5 +1,7 @@
 import base64
 import sys
+import tempfile
+import shutil
 import threading
 import time
 import unittest
@@ -15,6 +17,15 @@ def timeout():
 
 
 class ReviewRecoveryTests(unittest.TestCase):
+    def test_fresh_checkout_creates_review_cache(self):
+        with tempfile.TemporaryDirectory() as directory:
+            document = Path(directory) / '提示词' / 'policy.md'
+            document.parent.mkdir()
+            shutil.copyfile(app.ROOT / '提示词/上传审核与试穿约束.md', document)
+            policy = app.UploadPolicy(document)
+            self.assertTrue(policy.db_path.is_file())
+            self.assertTrue(policy.validate_text('换一件蓝色上衣')['text_checked'])
+
     def test_candidate_timeout_continues_same_row(self):
         image = 'data:image/jpeg;base64,' + base64.b64encode(b'candidate').decode()
         row = {'title': '男士白色连帽卫衣', 'url': 'https://shop.example/product/1', 'image': 'candidate'}

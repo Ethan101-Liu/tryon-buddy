@@ -1189,7 +1189,7 @@ class Handler(SimpleHTTPRequestHandler):
                 version = get_upload_policy().version
             except PolicyError as error:
                 return self.policy_error(error)
-            return self.json_response(200, {'tryOn': all(os.environ.get(key) for key in ('DASHSCOPE_API_KEY','BAILIAN_WORKSPACE_ID','ALIBABA_CLOUD_ACCESS_KEY_ID','ALIBABA_CLOUD_ACCESS_KEY_SECRET')), 'model': 'qwen-image-3.0', 'inference': 'cloud-only', 'search': True, 'policyVersion': version})
+            return self.json_response(200, {'tryOn': cloud.configured(), 'model': cloud.image_model(), 'inference': 'cloud-only', 'search': True, 'policyVersion': version})
         return super().do_GET()
 
     def do_POST(self):
