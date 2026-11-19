@@ -23,7 +23,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parent
 from ddgs import DDGS
-import aliyun_services as cloud
+from model_provider import cloud
 from PIL import Image, ImageOps
 from pillow_heif import register_heif_opener
 register_heif_opener()
@@ -887,7 +887,7 @@ def render_locked(renderer, prepared, cancel_event=None, report=None, resume_rev
     for index, (category, image, photo_type) in enumerate(inputs, 1):
         check_cancelled(cancel_event)
         if report:
-            report('generating', f'百炼正在生成第 {index} / {len(inputs)} 件试穿效果。')
+            report('generating', f'正在生成第 {index} / {len(inputs)} 件试穿效果。')
         try:
             person = cloud.try_on(person, image, category, photo_type, request_text, size)
         except cloud.CloudError as error:
@@ -1189,7 +1189,7 @@ class Handler(SimpleHTTPRequestHandler):
                 version = get_upload_policy().version
             except PolicyError as error:
                 return self.policy_error(error)
-            return self.json_response(200, {'tryOn': cloud.configured(), 'model': cloud.image_model(), 'inference': 'cloud-only', 'search': True, 'policyVersion': version})
+            return self.json_response(200, {'tryOn': cloud.configured(), 'model': cloud.image_model(), 'inference': getattr(cloud, 'INFERENCE_MODE', 'custom' if cloud.__name__ != 'aliyun_services' else 'cloud-only'), 'search': True, 'policyVersion': version})
         return super().do_GET()
 
     def do_POST(self):

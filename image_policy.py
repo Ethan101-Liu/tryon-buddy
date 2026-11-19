@@ -9,7 +9,7 @@ import hashlib
 import sqlite3
 from contextlib import closing
 import time
-import aliyun_services as cloud
+from model_provider import cloud
 import unicodedata
 
 from PIL import Image, ImageOps, UnidentifiedImageError

@@ -10,15 +10,22 @@
 
 ## 更换厂商或接入本地模型
 
-后端的 `serve_demo.py` 和 `image_policy.py` 都通过 `aliyun_services.py` 调用模型。可以在该文件中替换服务实现，保持下列函数签名和返回值，也可以把函数委托给自己的适配模块。更换厂商需要适配该服务的请求与响应协议。
+后端通过 `model_provider.py` 选择模型适配模块，默认使用 `aliyun_services.py`。
+
+1. 在项目根目录创建 `my_models.py`，实现下表全部函数，并定义 `class CloudError(Exception): pass`。各函数可委托给同一服务或不同服务。
+2. 在 `.runtime/cloud.env` 加入 `TRYON_PROVIDER_MODULE=my_models`，以及该模块需要的供应商密钥、地址等配置。模块通过 `os.environ` 读取配置。
+3. 在虚拟环境安装新供应商 SDK 等额外依赖，重启 `python serve_demo.py`。启动时会检查模块是否存在及接口是否完整。
+4. 打开 `http://127.0.0.1:18793/api/health`，确认模型名称与配置状态，再上传图片测试生成。自定义模块不需要默认阿里云的四项配置，`configured()` 应检查新模块实际使用的配置。
+
+更换厂商需要适配该服务的请求与响应协议。仅更改模型名称无法改变 API 协议。可选模块常量 `INFERENCE_MODE = "local"` 或 `"cloud"` 用于健康接口展示。
 
 | 函数 | 输入 | 返回 |
 | --- | --- | --- |
 | `plan(context)` | 包含 query、context、preferences、pieces 等的字典 | 字典，action 为 new、replace、again 或 clarify；kind 为 top、bottom 或 null；query 或 clarification 为非空字符串 |
 | `garment(data, criteria=None)` | 图片字节、可选的款式与颜色约束 | 字典，kind 为 top、bottom 或 unknown；photoType 为 flat-lay、model 或 unknown；category 为 top、pants、skirt 或 unknown；有约束时提供 matched 布尔值及 titleColors 列表 |
-| `moderate(jpeg)` | 待检查的图片字节 | none、low、medium 或 high 之一，现有规则据风险等级决定是否继续 |
+| `moderate(jpeg)` | 待检查的图片字节 | none、low、medium 或 high 之一，现有规则仅允许 none 继续，其余等级均拒绝 |
 | `portrait_output_size(width, height)` | 人物原图宽高 | 下游生成器理解的尺寸字符串，默认形如 `832*660` |
-| `try_on(person, garment_data, category, photo_type, request_text, size)` | 人物图片字节、衣物图片字节、tops 或 bottoms、图片类别、穿着要求和尺寸 | Pillow 可读取的生成图片字节，现有实现返回 WebP |
+| `try_on(person, garment_data, category, photo_type, request_text, size)` | 人物图片字节、衣物图片字节、tops 或 bottoms、图片类别、穿着要求和尺寸 | 有效的 WebP 图片字节；HTTP 结果接口以 image/webp 返回 |
 | `configured()` | 无 | 是否已配置当前适配实现所需凭据的布尔值，用于健康接口展示 |
 | `image_model()` | 无 | 当前生成模型名称，用于健康接口展示 |
 
@@ -28,7 +35,7 @@
 
 1. 传入人物原图与目标衣物两张图，结合 `category` 限定替换部位。
 2. 保留人物身份、姿态、场景、取景和未指定替换的衣物。根据原图尺寸选择新模型支持的输出画幅。
-3. 将供应商返回的图片地址或 Base64 解码为图片字节再返回。默认实现对输出大小有限制并转为 WebP。
+3. 将供应商返回的图片地址或 Base64 解码后，用 Pillow 转为 WebP 字节再返回。控制输出文件与像素大小，默认实现限制 32 MB、1600 万像素。
 4. 多件衣物由调用方按顺序编辑，后一件接收前一步的结果，适配函数每次负责一件。
 5. 接收生成超时或不确定响应时，避免无条件重新发起计费生成。已有成图只因审核失败时，任务模块会走审核恢复。
 6. 替换 `configured()` 与 `image_model()`，让 `/api/health` 反映新服务的配置与模型名称。该接口报告配置状态，实际可调用性需要请求服务验证。
@@ -41,4 +48,6 @@
 
 ## 接入后验证
 
-先运行 `python -m unittest discover -s tests -v`，再用自己的配置实际测试人物照上传、衣服图上传、文字搜衣、单件生成、保留单品继续换装和审核失败恢复。回归测试替代了付费服务，不能证明新厂商端到端可用。
+先运行 `python -m unittest discover -s tests -v`。其中 HTTP 回归测试会启动临时本机服务，验证独立适配模块加载、人物照上传、衣物检查、规划、两件衣物顺序处理与 WebP 结果返回；测试适配器只产生确定性图片，用于验证接口契约。
+
+再用自己的配置实际测试人物照上传、衣服图上传、文字搜衣、单件生成、保留单品继续换装和审核失败恢复。回归测试替代了付费服务，不能证明新厂商端到端可用。

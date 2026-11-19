@@ -60,6 +60,7 @@ Windows 可用 `py -3.12 -m venv .venv` 创建环境，用 `.venv\Scripts\Activa
 | `BAILIAN_WORKSPACE_ID` | 与 API Key 对应的北京地域业务空间 ID |
 | `ALIBABA_CLOUD_ACCESS_KEY_ID` | 图片审核服务所需的 RAM AccessKey ID |
 | `ALIBABA_CLOUD_ACCESS_KEY_SECRET` | 对应的 AccessKey Secret |
+| `TRYON_PROVIDER_MODULE` | 可选，自定义 Python 适配模块名，默认 `aliyun_services` |
 | `QWEN_VISION_MODEL` | 可选，理解与识图模型，默认 `qwen3-vl-plus` |
 | `QWEN_IMAGE_MODEL` | 可选，支持当前双图编辑接口的模型，默认 `qwen-image-3.0` |
 
@@ -75,12 +76,13 @@ python serve_demo.py
 
 浏览器将本人照、衣物和文字需求提交给 Python 后端。后端完成图片格式检查与审核，调用理解模型生成搭配动作，用图片搜索取得衣物候选并核验，创建生成任务，依次编辑选中的单品，审核结果后返回浏览器保存。
 
-模型调用集中在 `aliyun_services.py`。使用现有百炼接口时填写自己的凭据即可；更换同协议模型时配置模型名称；使用其他厂商或本地模型时，按 [接入文档中的函数契约](docs/model-integration.md) 实现对应调用。
+模型由 `model_provider.py` 加载，默认调用集中在 `aliyun_services.py`。使用现有百炼接口时填写自己的凭据即可；更换同协议模型时配置模型名称；使用其他厂商或本地模型时，按 [接入文档中的函数契约](docs/model-integration.md) 实现对应调用。
 
 | 文件或目录 | 职责 |
 | --- | --- |
 | `dist/` | 响应式页面、对话、衣柜、记录、备选与示例素材 |
 | `serve_demo.py` | 静态服务、HTTP API、搜衣、任务队列、审核恢复 |
+| `model_provider.py` | 选择并检查默认或自定义模型适配模块 |
 | `aliyun_services.py` | 理解、识图、图片生成、云端审核适配 |
 | `image_policy.py` | 图片与文字检查、审核缓存 |
 | `提示词/` | 上传规则与试穿约束 |
@@ -103,7 +105,7 @@ python serve_demo.py
 python -m unittest discover -s tests -v
 ```
 
-回归测试使用替代服务验证队列和恢复行为。真实成图质量、延迟及费用需用自己的模型配置另行验证。
+回归测试使用替代服务验证队列和恢复行为，并启动临时本机 HTTP 服务检查自定义模型的完整接入链路。真实成图质量、延迟及费用需用自己的模型配置另行验证。
 
 ## 开源协议
 
