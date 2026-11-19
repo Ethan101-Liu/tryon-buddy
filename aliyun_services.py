@@ -1,4 +1,4 @@
-"""Cloud-only clients for the B demo. Keep credentials outside the static root."""
+"""Cloud clients for 试穿搭子. Keep credentials outside the static root."""
 import base64
 import io
 import json
@@ -26,7 +26,7 @@ class CloudError(Exception):
 def setting(name):
     value = os.environ.get(name)
     if not value:
-        raise CloudError('云端配置缺少 ' + name + '。请配置后重启 B 版服务。')
+        raise CloudError('云端配置缺少 ' + name + '。请配置后重启试穿搭子服务。')
     return value
 
 

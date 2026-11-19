@@ -1,4 +1,4 @@
-"""Serve the B demo, live garment search, and the cloud-only Alibaba providers."""
+"""Serve 试穿搭子, live garment search, and the configured model provider."""
 import argparse
 import base64
 from concurrent.futures import ThreadPoolExecutor

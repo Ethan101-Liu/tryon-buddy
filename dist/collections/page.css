@@ -150,9 +150,8 @@ figcaption { margin: 10px 0 0; text-align: center; font: 12px/1.5 var(--sans); c
 .piece.swatch img { opacity: .80 }
 footer { position: sticky; bottom: max(20px,env(safe-area-inset-bottom)); z-index: 5; pointer-events: none }
 .dock { display: flex; justify-content: center; margin-top: 5px }
-.dock button { pointer-events: auto; background: #a23324; border: 1px solid #fff8; color: #fff9f0; padding: 12px 27px; border-radius: 99px; box-shadow: 0 4px 14px #60291f30; font-family: inherit; font-size: 17px; line-height: 1.4; cursor: pointer }
+.dock button { display: inline-flex; align-items: center; justify-content: center; text-align: center; pointer-events: auto; background: #a23324; border: 1px solid #fff8; color: #fff9f0; padding: 12px 27px; border-radius: 99px; box-shadow: 0 4px 14px #60291f30; font-family: inherit; font-size: 17px; line-height: 1.4; cursor: pointer }
 .dock button:hover { background: #842a20 }
-.dock span { margin-left: 10px }
 .preview { width: min(94vw,1100px); max-height: 90svh; overflow: auto; border: 0; padding: 18px; background: #fffaf3; color: var(--ink) }
 .preview::backdrop { background: #261e1788 }
 .preview img { display: block; width: 100%; height: auto }
