@@ -983,7 +983,7 @@ function stylingPage(wrap,scrollState){
   }
   wrap.classList.add('conversation');wrap.classList.toggle('started',!!conversation.length);
   wrap.querySelector('.space-head').remove();
-  const thread=el('div','conv-thread');thread.setAttribute('role','log');thread.setAttribute('aria-label','试穿对话');
+  const thread=el('div','conv-thread');thread.setAttribute('role','log');thread.setAttribute('aria-label','试穿空间');
   const partial=partialOutfitTurn();
   const pending=partial?null:waitingPhotoTurn();
   const pendingMessage=pending&&conversation.findLast(turn=>turn===pending||turn.choiceTarget===pending);
@@ -1000,7 +1000,7 @@ function stylingPage(wrap,scrollState){
       if(pending.pieces.length)state.append(pic((pending.changedPieces?.at(-1)||pending.pieces[0]).url,''));
       state.append(current);
     }else if(selectedOutfitTurn?.photo){const current=el('span','','当前搭配 · '+selectedOutfitTurn.pieces.length+' 件单品');current.title=selectedOutfitTurn.pieces.map(piece=>piece.displayName||piece.name).join(' / ');state.append(pic(selectedOutfitTurn.photo,'当前搭配'),current);}
-    else state.append(el('span','','试穿对话'));
+    else state.append(el('span','','试穿空间'));
     const undo=action('撤销上次修改',()=>submitChat('撤销'));
     undo.disabled=conversation.some(turn=>turn.running)||!(waitingOutfitChange()||selectedOutfitTurn?.baseTurn);
     const reset=button('','conv-reset',askResetChat);

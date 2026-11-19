@@ -3,7 +3,7 @@ const spaceRecords = new Map();
 const archiveFiles = new Map();
 const pageBox = $('#space-page');
 const spaceDialog = $('#space-dialog');
-const sections = {closet:'我的衣服',history:'试穿记录',saved:'备选',styling:'试穿对话'};
+const sections = {closet:'我的衣服',history:'试穿记录',saved:'备选',styling:'试穿空间'};
 let activeSpace = 'styling';
 let noticeTimer;
 function notice(message) {
@@ -149,7 +149,7 @@ function recordsPage(wrap){
   const saved=activeSpace==='saved';
   const rows=[...spaceRecords.values()].filter(row=>(row.owner??null)===personalPhoto.account()&&(!saved||row.saved)).sort((a,b)=>b.date-a.date||Number(a.number)-Number(b.number));
   if(!rows.length){
-    const empty=el('div','space-empty');empty.append(el('h2','',saved?'还没有备选搭配':'还没有试穿记录'),el('p','space-muted',saved?'打开一张试穿图，点「加入备选」就能在这里找到它。':'完成试穿后，可以在这里重新查看每张效果图。'),action('去试穿对话',()=>goSpace('styling')));wrap.append(empty);return;
+    const empty=el('div','space-empty');empty.append(el('h2','',saved?'还没有备选搭配':'还没有试穿记录'),el('p','space-muted',saved?'打开一张试穿图，点「加入备选」就能在这里找到它。':'完成试穿后，可以在这里重新查看每张效果图。'),action('去试穿空间',()=>goSpace('styling')));wrap.append(empty);return;
   }
   const grid=gallery(wrap);
   if(saved && rows.length<=2)grid.classList.add('saved-pair');

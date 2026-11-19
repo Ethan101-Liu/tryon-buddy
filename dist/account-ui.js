@@ -36,7 +36,7 @@
         const file=input.files[0];if(!file)return;
         status.textContent='正在准备并审核本人照…';
         try{const normalized=await preparePortrait(file);if(signed()!==user||!input.isConnected)return;
-          await personalPhoto.put(normalized);await preview();changed();status.textContent='本人照已保存，可在试穿对话中使用。';
+          await personalPhoto.put(normalized);await preview();changed();status.textContent='本人照已保存，可在试穿空间中使用。';
         }catch(error){status.textContent=error.message||'保存失败，请换一张 JPG、PNG 或 WebP 图片。';}
         finally{input.value='';}
       };
